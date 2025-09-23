@@ -1,0 +1,21 @@
+.idea/
+*.iml
+*.iws
+
+# === Build outputs ===
+out/
+build/
+bin/
+target/
+
+# === Logs & temp files ===
+*.log
+*.tmp
+*.swp
+*.swo
+
+# === Java ===
+*.class
+*.jar
+*.war
+*.ear
