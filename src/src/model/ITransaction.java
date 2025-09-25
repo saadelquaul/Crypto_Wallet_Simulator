@@ -16,7 +16,7 @@ public interface ITransaction {
     double getFees();
     FeePriority getFeePriority();
     TransactionStatus getStatus();
-    CryptoType getCryptoType();
+    CryptoType getCryptoCurrency();
 
 
     void setStatus(TransactionStatus status);

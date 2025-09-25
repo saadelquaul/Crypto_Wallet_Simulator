@@ -58,7 +58,7 @@ public class Wallet implements IWallet {
     }
 
     public List<ITransaction> getTransactions() {
-        return transactions;
+        return this.transactions;
     }
 
     @Override
