@@ -1,12 +1,12 @@
 create table if not exists wallets (
-id SERIAL primary key,
-adress varchar(100) not null unique,
+id UUID primary key default uuid_generate_v4(),
+address varchar(100) not null unique,
 balanace double precision not null,
 type varchar(50) not null
 );
 
 create table if not exists transactions (
-id SERIAL primary key,
+id UUID primary key default uuid_generate_v4(),
 source_address varchar(100) not null,
 destination_address varchar(100) not null,
 amount double precision not null,
