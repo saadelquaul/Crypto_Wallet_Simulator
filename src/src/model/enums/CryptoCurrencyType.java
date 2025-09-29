@@ -1,6 +1,6 @@
 package model.enums;
 
-public enum CryptoType {
+public enum CryptoCurrencyType {
     BITCOIN,
     ETHEREUM
 }
