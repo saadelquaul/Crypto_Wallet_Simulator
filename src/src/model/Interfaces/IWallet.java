@@ -1,6 +1,6 @@
-package model;
+package model.Interfaces;
 
-import model.enums.CryptoType;
+import model.enums.CryptoCurrencyType;
 
 import java.util.UUID;
 
@@ -8,7 +8,7 @@ public interface IWallet {
     UUID getId();
     String getAddress();
     double getBalance();
-    CryptoType getType();
+    CryptoCurrencyType getType();
     void deposit(double amount);
     void withdraw(double amount);
     void addTransaction(ITransaction transaction);

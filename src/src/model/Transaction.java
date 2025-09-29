@@ -1,13 +1,14 @@
 package model;
 
-import model.enums.CryptoType;
-import model.enums.FeePriority;
+import model.Interfaces.ITransaction;
+import model.enums.CryptoCurrencyType;
+import model.enums.FeeLevel;
 import model.enums.TransactionStatus;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class Transaction implements ITransaction{
+public class Transaction implements ITransaction {
 
     private UUID id;
     private String sourceAddress;
@@ -15,32 +16,34 @@ public class Transaction implements ITransaction{
     private double amount;
     private LocalDateTime creationDate;
     private double fees;
-    private FeePriority feePriority;
+    private FeeLevel feeLevel;
     private TransactionStatus status;
-    private CryptoType cryptoCurrency;
+    private CryptoCurrencyType cryptoCurrencyType;
 
 
     public Transaction (String sourceAddress, String destinationAddress, double amount,
-                        FeePriority feePriority, CryptoType cryptoCurrency) {
+                        FeeLevel feeLevel, CryptoCurrencyType cryptoCurrencyType) {
         this.id = UUID.randomUUID();
         this.sourceAddress = sourceAddress;
         this.destinationAddress = destinationAddress;
         this.amount = amount;
-        this.feePriority = feePriority;
-        this.cryptoCurrency = cryptoCurrency;
+        this.feeLevel = feeLevel;
+        this.cryptoCurrencyType = cryptoCurrencyType;
         this.status = TransactionStatus.PENDING;
 
     }
 
     public Transaction (UUID id, String sourceAddress, String destinationAddress, double amount,
-                        FeePriority feePriority, CryptoType cryptoCurrency, TransactionStatus status) {
+                        FeeLevel feeLevel, CryptoCurrencyType cryptoCurrencyType, TransactionStatus status,LocalDateTime creationDate,double fees) {
         this.id = id;
         this.sourceAddress = sourceAddress;
         this.destinationAddress = destinationAddress;
         this.amount = amount;
-        this.feePriority = feePriority;
-        this.cryptoCurrency = cryptoCurrency;
+        this.feeLevel = feeLevel;
+        this.cryptoCurrencyType = cryptoCurrencyType;
         this.status = status;
+        this.creationDate = creationDate;
+        this.fees = fees;
     }
 
     @Override
@@ -74,8 +77,8 @@ public class Transaction implements ITransaction{
     }
 
     @Override
-    public FeePriority getFeePriority() {
-        return this.feePriority;
+    public FeeLevel getFeeLevel() {
+        return this.feeLevel;
     }
 
     @Override
@@ -84,8 +87,8 @@ public class Transaction implements ITransaction{
     }
 
     @Override
-    public CryptoType getCryptoCurrency() {
-        return this.cryptoCurrency;
+    public CryptoCurrencyType getCryptoCurrencyType() {
+        return this.cryptoCurrencyType;
     }
 
     @Override
@@ -107,9 +110,9 @@ public class Transaction implements ITransaction{
         ", amount=" + this.amount +
                 ", creationDate=" + this.creationDate +
                 ", fees=" + String.format("%.2f", fees) +
-                ", feeLevel=" + this.feePriority +
+                ", feeLevel=" + this.feeLevel +
                 ", status=" + this.status +
-                ", cryptoCurrencyType=" + this.cryptoCurrency +
+                ", cryptoCurrencyType=" + this.cryptoCurrencyType +
                 "\'}";
         }
 }

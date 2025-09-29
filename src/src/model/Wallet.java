@@ -1,6 +1,8 @@
 package model;
 
-import model.enums.CryptoType;
+import model.Interfaces.ITransaction;
+import model.Interfaces.IWallet;
+import model.enums.CryptoCurrencyType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,14 +12,22 @@ public class Wallet implements IWallet {
     private UUID id;
     private String address;
     private double balance;
-    private CryptoType type;
+    private CryptoCurrencyType type;
     private List<ITransaction> transactions;
 
 
-    public Wallet (CryptoType type){
+    public Wallet (CryptoCurrencyType type){
         this.id = UUID.randomUUID();
         this.address = generateWalletAddressByType(type);
         this.balance = 0.0;
+        this.type = type;
+        this.transactions = new ArrayList<>();
+    }
+
+    public Wallet (UUID id, CryptoCurrencyType type, String address, double balance){
+        this.id = id;
+        this.address = address;
+        this.balance = balance;
         this.type = type;
         this.transactions = new ArrayList<>();
     }
@@ -38,7 +48,7 @@ public class Wallet implements IWallet {
     }
 
     @Override
-    public CryptoType getType() {
+    public CryptoCurrencyType getType() {
         return this.type;
     }
 

@@ -1,7 +1,7 @@
-package model;
+package model.Interfaces;
 
-import model.enums.CryptoType;
-import model.enums.FeePriority;
+import model.enums.CryptoCurrencyType;
+import model.enums.FeeLevel;
 import model.enums.TransactionStatus;
 
 import java.time.LocalDateTime;
@@ -14,9 +14,9 @@ public interface ITransaction {
     double getAmount();
     LocalDateTime getCreationTime();
     double getFees();
-    FeePriority getFeePriority();
+    FeeLevel getFeeLevel();
     TransactionStatus getStatus();
-    CryptoType getCryptoCurrency();
+    CryptoCurrencyType getCryptoCurrencyType();
 
 
     void setStatus(TransactionStatus status);

@@ -1,6 +1,6 @@
 package model.enums;
 
-public enum FeePriority {
+public enum FeeLevel {
     ECONOMICAL,
     STANDARD,
     FAST
