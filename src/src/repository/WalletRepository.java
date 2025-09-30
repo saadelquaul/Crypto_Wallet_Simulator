@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 public class WalletRepository implements IRepository<IWallet, UUID> {
 
-    private final Logger LOGGER =
+    private static final Logger LOGGER =
             Logger.getLogger(WalletRepository.class.getName());
     private final DatabaseConnectionManager connectionManager;
 
@@ -132,7 +132,7 @@ public class WalletRepository implements IRepository<IWallet, UUID> {
         if (type == CryptoCurrencyType.BITCOIN) {
             wallet = new Wallet(id, CryptoCurrencyType.BITCOIN, address, balance);
         } else if (type == CryptoCurrencyType.ETHEREUM) {
-            wallet = new Wallet(id, CryptoCurrencyType.ETHEREUM, address, balances);
+            wallet = new Wallet(id, CryptoCurrencyType.ETHEREUM, address, balance);
         } else {
             throw new SQLException("Unknown CryptoCurrencyType: " + type);
         }
