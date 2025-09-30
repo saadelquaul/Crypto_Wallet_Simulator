@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static util.AddressGenerator.generateWalletAddressByType;
+
 public class Wallet implements IWallet {
     private UUID id;
     private String address;
@@ -16,9 +18,9 @@ public class Wallet implements IWallet {
     private List<ITransaction> transactions;
 
 
-    public Wallet (CryptoCurrencyType type){
+    public Wallet (CryptoCurrencyType cryptoCurrencyType){
         this.id = UUID.randomUUID();
-        this.address = generateWalletAddressByType(type);
+        this.address = generateWalletAddressByType(cryptoCurrencyType);
         this.balance = 0.0;
         this.type = type;
         this.transactions = new ArrayList<>();

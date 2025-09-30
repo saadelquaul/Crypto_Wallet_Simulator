@@ -17,8 +17,8 @@ import java.util.logging.Logger;
 
 public class TransactionRepository implements IRepository<ITransaction, UUID> {
 
-    private final Logger LOGGER = Logger.getLogger(TransactionRepository.class.getName());
-    private final DatabaseConnectionManager connectionManager;
+    private static final Logger LOGGER = Logger.getLogger(TransactionRepository.class.getName());
+    private  final DatabaseConnectionManager connectionManager;
 
     public TransactionRepository(DatabaseConnectionManager connectionManager) throws SQLException {
             this.connectionManager = connectionManager;
