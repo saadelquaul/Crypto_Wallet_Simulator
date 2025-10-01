@@ -129,7 +129,7 @@ Application events are logged using Java's built-in logging framework. Logs incl
 - Error conditions
 
 ## Class Diagram (UML)
-![Class Diagram](Crypto_Wallet_Simulator/src/src/CryptoWalletSimulator.png)
+![Class Diagram](src/src/CryptoWalletSimulator.png)
 
 ## Contact
 
