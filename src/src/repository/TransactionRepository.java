@@ -18,25 +18,24 @@ import java.util.logging.Logger;
 public class TransactionRepository implements IRepository<ITransaction, UUID> {
 
     private static final Logger LOGGER = Logger.getLogger(TransactionRepository.class.getName());
-    private  final DatabaseConnectionManager connectionManager;
+    private final DatabaseConnectionManager connectionManager;
 
     public TransactionRepository(DatabaseConnectionManager connectionManager) throws SQLException {
-            this.connectionManager = connectionManager;
-            createTableIfNotExists();
+        this.connectionManager = connectionManager;
+        createTableIfNotExists();
     }
 
     private void createTableIfNotExists() throws SQLException {
         String sql = "CREATE TABLE IF NOT EXISTS transactions (\n" +
                 " id UUID PRIMARY KEY, \n" +
-                " SOURCE_ADDRESS VARCHAR(100) not null,\n"+
+                " SOURCE_ADDRESS VARCHAR(100) not null,\n" +
                 " destination_address varchar(100) not null,\n" +
                 " amount double precision not null,\n" +
                 " creation_date timestamp not null,\n" +
                 " fees double precision not null,\n" +
                 " fee_level varchar(50) not null,\n" +
                 " status varchar(50) not null,\n" +
-                " crypto_currency_type varchar(50) not null,\n" +
-                ");";
+                " crypto_currency_type varchar(50) not null );";
         try (Connection conn = connectionManager.getConnection(); Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
             LOGGER.info("Transactions table ensured to exist.");
@@ -76,10 +75,9 @@ public class TransactionRepository implements IRepository<ITransaction, UUID> {
             LOGGER.log(Level.SEVERE, "Error saving transaction " +
                     transaction.getId(), e);
             return null;
-         }
-
         }
 
+    }
 
 
     @Override
@@ -115,37 +113,52 @@ public class TransactionRepository implements IRepository<ITransaction, UUID> {
         return transactions;
     }
 
-
-@Override
-public void deleteById(UUID id) {
-    String sql = "DELETE FROM transactions WHERE id = ?";
-    try (Connection conn = connectionManager.getConnection();
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-        pstmt.setObject(1, id);
-        pstmt.executeUpdate();
-        LOGGER.info("Transaction " + id + " deleted successfully.");
-    } catch (SQLException e) {
-        LOGGER.log(Level.SEVERE, "Error deleting transaction by id " + id,
-                e);
+    public List<ITransaction> findAllPendingTransactions() {
+        List<ITransaction> transactions = new ArrayList<>();
+        String sql = "SELECT * FROM transactions where status = 'PENDING'";
+        try (Connection conn = connectionManager.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                transactions.add(mapResultSetToTransaction(rs));
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error finding all transactions", e);
+        }
+        return transactions;
     }
-  }
 
-private ITransaction mapResultSetToTransaction(ResultSet rs) throws
-        SQLException {
-    UUID id = (UUID) rs.getObject("id");
-    String sourceAddress = rs.getString("source_address");
-    String destinationAddress = rs.getString("destination_address");
-    double amount = rs.getDouble("amount");
-    LocalDateTime creationDate =
-            rs.getTimestamp("creation_date").toLocalDateTime();
-    double fees = rs.getDouble("fees");
-    FeeLevel feeLevel = FeeLevel.valueOf(rs.getString("fee_level"));
-    TransactionStatus status =
-            TransactionStatus.valueOf(rs.getString("status"));
-    CryptoCurrencyType cryptoCurrencyType =
-            CryptoCurrencyType.valueOf(rs.getString("crypto_currency_type"));
-    return new Transaction(id, sourceAddress, destinationAddress, amount
-            , feeLevel ,  cryptoCurrencyType, status, creationDate, fees);
-}
+
+    @Override
+    public void deleteById(UUID id) {
+        String sql = "DELETE FROM transactions WHERE id = ?";
+        try (Connection conn = connectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setObject(1, id);
+            pstmt.executeUpdate();
+            LOGGER.info("Transaction " + id + " deleted successfully.");
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error deleting transaction by id " + id,
+                    e);
+        }
+    }
+
+    private ITransaction mapResultSetToTransaction(ResultSet rs) throws
+            SQLException {
+        UUID id = (UUID) rs.getObject("id");
+        String sourceAddress = rs.getString("source_address");
+        String destinationAddress = rs.getString("destination_address");
+        double amount = rs.getDouble("amount");
+        LocalDateTime creationDate =
+                rs.getTimestamp("creation_date").toLocalDateTime();
+        double fees = rs.getDouble("fees");
+        FeeLevel feeLevel = FeeLevel.valueOf(rs.getString("fee_level"));
+        TransactionStatus status =
+                TransactionStatus.valueOf(rs.getString("status"));
+        CryptoCurrencyType cryptoCurrencyType =
+                CryptoCurrencyType.valueOf(rs.getString("crypto_currency_type"));
+        return new Transaction(id, sourceAddress, destinationAddress, amount
+                , feeLevel, cryptoCurrencyType, status, creationDate, fees);
+    }
 
 }

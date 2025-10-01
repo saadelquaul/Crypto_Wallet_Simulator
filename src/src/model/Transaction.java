@@ -21,8 +21,8 @@ public class Transaction implements ITransaction {
     private CryptoCurrencyType cryptoCurrencyType;
 
 
-    public Transaction (String sourceAddress, String destinationAddress, double amount,
-                        FeeLevel feeLevel, CryptoCurrencyType cryptoCurrencyType) {
+    public Transaction(String sourceAddress, String destinationAddress, double amount,
+                       FeeLevel feeLevel, CryptoCurrencyType cryptoCurrencyType) {
         this.id = UUID.randomUUID();
         this.sourceAddress = sourceAddress;
         this.destinationAddress = destinationAddress;
@@ -30,11 +30,12 @@ public class Transaction implements ITransaction {
         this.feeLevel = feeLevel;
         this.cryptoCurrencyType = cryptoCurrencyType;
         this.status = TransactionStatus.PENDING;
+        this.creationDate = LocalDateTime.now();
 
     }
 
-    public Transaction (UUID id, String sourceAddress, String destinationAddress, double amount,
-                        FeeLevel feeLevel, CryptoCurrencyType cryptoCurrencyType, TransactionStatus status,LocalDateTime creationDate,double fees) {
+    public Transaction(UUID id, String sourceAddress, String destinationAddress, double amount,
+                       FeeLevel feeLevel, CryptoCurrencyType cryptoCurrencyType, TransactionStatus status, LocalDateTime creationDate, double fees) {
         this.id = id;
         this.sourceAddress = sourceAddress;
         this.destinationAddress = destinationAddress;
@@ -77,6 +78,11 @@ public class Transaction implements ITransaction {
     }
 
     @Override
+    public void setFees(double fees) {
+        this.fees = fees;
+    }
+
+    @Override
     public FeeLevel getFeeLevel() {
         return this.feeLevel;
     }
@@ -92,27 +98,17 @@ public class Transaction implements ITransaction {
     }
 
     @Override
-    public void setStatus(TransactionStatus status) {
-            this.status = status;
-    }
-
-    @Override
-    public void setFees(double fees) {
-            this.fees = fees;
-    }
-
-    @Override
     public String toString() {
         return "Transaction{" +
                 "id=" + this.id +
-                ", sourceAddress=\'" + this.sourceAddress + '\'' +
-        ", destinationAddress=\'" + this.destinationAddress + '\'' +
-        ", amount=" + this.amount +
+                ", sourceAddress='" + this.sourceAddress + '\'' +
+                ", destinationAddress='" + this.destinationAddress + '\'' +
+                ", amount=" + this.amount +
                 ", creationDate=" + this.creationDate +
                 ", fees=" + String.format("%.2f", fees) +
                 ", feeLevel=" + this.feeLevel +
                 ", status=" + this.status +
                 ", cryptoCurrencyType=" + this.cryptoCurrencyType +
-                "\'}";
-        }
+                "'}";
+    }
 }
