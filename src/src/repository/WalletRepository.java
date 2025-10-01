@@ -1,11 +1,19 @@
 package repository;
 
+import model.Interfaces.ITransaction;
 import model.Interfaces.IWallet;
+import model.Transaction;
 import model.Wallet;
 import model.enums.CryptoCurrencyType;
+import model.enums.FeeLevel;
+import model.enums.TransactionStatus;
 
 import java.sql.*;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,9 +47,9 @@ public class WalletRepository implements IRepository<IWallet, UUID> {
     @Override
     public IWallet save(IWallet wallet) {
         String sql = "INSERT INTO wallets (id, address, balance, type) VALUES " +
-        "( ?, ?, ?, ?)" +
-        "ON CONFLICT (id) DO UPDATE SET address = " +
-        "EXCLUDED.address, balance = EXCLUDED.balance, type = EXCLUDED.type;";
+                "( ?, ?, ?, ?)" +
+                "ON CONFLICT (id) DO UPDATE SET address = " +
+                "EXCLUDED.address, balance = EXCLUDED.balance, type = EXCLUDED.type;";
         try (Connection conn = connectionManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setObject(1, wallet.getId());
@@ -128,7 +136,7 @@ public class WalletRepository implements IRepository<IWallet, UUID> {
         CryptoCurrencyType type =
                 CryptoCurrencyType.valueOf(rs.getString("type"));
         // Use appropriate concrete wallet class based on type
-        Wallet wallet;
+        IWallet wallet;
         if (type == CryptoCurrencyType.BITCOIN) {
             wallet = new Wallet(id, CryptoCurrencyType.BITCOIN, address, balance);
         } else if (type == CryptoCurrencyType.ETHEREUM) {
@@ -137,7 +145,39 @@ public class WalletRepository implements IRepository<IWallet, UUID> {
             throw new SQLException("Unknown CryptoCurrencyType: " + type);
         }
 
+        wallet = getWalletTransactions(wallet);
         return wallet;
     }
+
+    public IWallet getWalletTransactions(IWallet wallet) {
+        String sql = "SELECT * FROM transactions where transactions.source_address = ?;";
+        try (Connection conn = connectionManager.getConnection()) {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setObject(1, wallet.getAddress());
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+
+                UUID id = (UUID) rs.getObject("id");
+                String sourceAddress = rs.getString("source_address");
+                String destinationAddress = rs.getString("destination_address");
+                double amount = rs.getDouble("amount");
+                FeeLevel feeLevel = FeeLevel.valueOf(rs.getString("fee_level"));
+                CryptoCurrencyType cryptoType = CryptoCurrencyType.valueOf(rs.getString("crypto_currency_type"));
+                TransactionStatus status = TransactionStatus.valueOf(rs.getString("status"));
+                LocalDateTime creationDate = rs.getTimestamp("creation_date").toLocalDateTime();
+                double fees = rs.getDouble("fees");
+                ITransaction transaction = new Transaction(id, sourceAddress, destinationAddress, amount, feeLevel, cryptoType,
+                        status, creationDate, fees);
+                wallet.addTransaction(transaction);
+            }
+
+            return wallet;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return wallet;
+    }
+
 
 }

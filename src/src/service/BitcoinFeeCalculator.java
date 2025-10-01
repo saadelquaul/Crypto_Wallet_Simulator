@@ -2,11 +2,12 @@ package service;
 
 import model.enums.FeeLevel;
 
-public class BitcoinFeeCalculator  implements FeeCalculator{
+public class BitcoinFeeCalculator implements FeeCalculator {
     private static final double SATOSHI_PER_BYTE_ECONOMIC = 50.0;
     private static final double SATOSHI_PER_BYTE_STANDARD = 100.0;
     private static final double SATOSHI_PER_BYTE_RAPID = 150.0;
     private static final int TRANSACTION_SIZE_BYTES = 226;
+
     @Override
     public double calculateFees(FeeLevel feeLevel) {
         double satoshiPerByte;

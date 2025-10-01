@@ -3,7 +3,6 @@ package model;
 import model.Interfaces.ITransaction;
 import model.Interfaces.IWallet;
 import model.enums.CryptoCurrencyType;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -18,15 +17,15 @@ public class Wallet implements IWallet {
     private List<ITransaction> transactions;
 
 
-    public Wallet (CryptoCurrencyType cryptoCurrencyType){
+    public Wallet(CryptoCurrencyType cryptoCurrencyType) {
         this.id = UUID.randomUUID();
         this.address = generateWalletAddressByType(cryptoCurrencyType);
         this.balance = 0.0;
-        this.type = type;
+        this.type = cryptoCurrencyType;
         this.transactions = new ArrayList<>();
     }
 
-    public Wallet (UUID id, CryptoCurrencyType type, String address, double balance){
+    public Wallet(UUID id, CryptoCurrencyType type, String address, double balance) {
         this.id = id;
         this.address = address;
         this.balance = balance;
@@ -35,7 +34,7 @@ public class Wallet implements IWallet {
     }
 
     @Override
-    public UUID getId(){
+    public UUID getId() {
         return this.id;
     }
 
@@ -56,12 +55,12 @@ public class Wallet implements IWallet {
 
     @Override
     public void deposit(double amount) {
-       if(amount > 0) this.balance += amount;
+        if (amount > 0) this.balance += amount;
     }
 
     @Override
     public void withdraw(double amount) {
-    if( amount > 0 && this.balance >= amount) this.balance -= amount;
+        if (amount > 0 && this.balance >= amount) this.balance -= amount;
     }
 
     @Override
@@ -74,11 +73,12 @@ public class Wallet implements IWallet {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "Wallet { id = " + this.id +
-                ", type=\'" + this.type + "\'" +
-                ", address=\'" + this.address + "\'" +
+                ", type='" + this.type + "'" +
+                ", address='" + this.address + "'" +
                 ", balance=" + String.format("%.2f", this.balance) +
                 '}';
 
-    }}
+    }
+}
