@@ -58,8 +58,28 @@ src/
    git clone <repository-url>
    cd Crypto_Wallet_Simulator
    ```
+2.**Environment Configuration**
 
-2. **Database Setup**
+   - Create a `.env` file in the project root directory (same level as the `src` folder)
+   - Add the following environment variables to the `.env` file:
+
+   ```bash
+   # Database Configuration
+   DB_URL=jdbc:postgresql://localhost:5432/crypto_wallet
+   DB_USER=your_postgresql_username
+   DB_PASSWORD=your_postgresql_password
+   ```
+
+   **Important Notes:**
+   - Replace `your_postgresql_username` with your actual PostgreSQL username
+   - Replace `your_postgresql_password` with your actual PostgreSQL password
+   - If your PostgreSQL runs on a different port, update the port number in the URL
+   - If your database has a different name, update `crypto_wallet` in the URL
+
+  - **Security**: Never commit the `.env` file to version control. The `.env.example` file is provided as a template.
+
+    
+3. **Database Setup**
    - Create a database for the application
    - Update database connection settings in `DatabaseConnectionManager.java`
    - Create the required tables:
