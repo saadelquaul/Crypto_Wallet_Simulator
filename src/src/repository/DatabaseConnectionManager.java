@@ -1,19 +1,18 @@
 package repository;
 
-import config.DbConfig;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import util.EnvLoader;
 
 public class DatabaseConnectionManager {
     private static final Logger LOGGER =
             Logger.getLogger(DatabaseConnectionManager.class.getName());
-    private static final String DB_URL = DbConfig.URL;
-    private static final String DB_USER = DbConfig.USER;
-    private static final String DB_PASSWORD = DbConfig.PASSWORD;
+    private static  final String DB_URL = EnvLoader.get("DB_URL");
+    private static final String DB_USER = EnvLoader.get("DB_USER");
+    private static final String DB_PASSWORD = EnvLoader.get("DB_PASSWORD")    ;
     private static DatabaseConnectionManager instance;
 
     private DatabaseConnectionManager() {
@@ -33,6 +32,9 @@ public class DatabaseConnectionManager {
     }
 
     public Connection getConnection() throws SQLException {
+        if (DB_URL == null) {
+            throw new IllegalStateException("DB_URL not found in environment variables or .env file");
+        }
         LOGGER.info("Attempting to get database connection.");
         return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
     }
