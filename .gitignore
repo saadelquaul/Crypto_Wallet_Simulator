@@ -19,3 +19,6 @@ target/
 *.jar
 *.war
 *.ear
+
+src/.env
+.env
